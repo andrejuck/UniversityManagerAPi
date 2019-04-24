@@ -1,9 +1,9 @@
 ﻿namespace UniversityManagerAPI.Models
 {
-    public class Telefones : BaseModel
+    public class Telefone : BaseModel
     {
         public int Numero { get; set; }        
         public TipoTelefone Tipo { get; set; }
-        public Alunos Aluno { get; set; }
+        public Aluno Aluno { get; set; }
     }
 }

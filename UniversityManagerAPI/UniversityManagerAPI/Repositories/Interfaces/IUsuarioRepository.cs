@@ -6,7 +6,8 @@ using UniversityManagerAPI.Models;
 
 namespace UniversityManagerAPI.Repositories.Interfaces
 {
-    public interface IUsuariosRepository : IBaseRepository<Usuarios>
+    public interface IUsuarioRepository : IBaseRepository<Usuario>
     {
+        Usuario GetUsuarioLogin(Usuario usuario);
     }
 }
