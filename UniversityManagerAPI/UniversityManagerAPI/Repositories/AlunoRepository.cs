@@ -15,7 +15,7 @@ namespace UniversityManagerAPI.Repositories
         {
         }
 
-        public Task<Aluno> Create(Aluno model)
+        public Aluno Create(Aluno model)
         {
             throw new NotImplementedException();
         }

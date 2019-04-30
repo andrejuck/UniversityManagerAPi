@@ -15,22 +15,21 @@ namespace UniversityManagerAPI.Repositories
         {
         }
 
-        public async Task<Usuario> Create(Usuario model)
+        public Usuario Create(Usuario model)
         {
-
-            _context.Add(model);
-
-            if (_context.SaveChanges() > 0)
+            try
             {
-                var teste = _context.Usuarios
-                    .Include(i => i.Aluno)
-                    .Where(w => w.Id == model.Aluno.Id)
-                    .SingleOrDefault();
+                _context.Add(model);
 
-                _context.SaveChanges();
+                if (_context.SaveChanges() > 0)
+                    return model;
+
+                return null;
             }
-
-            return null;
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao registrar usuário: " + ex.Message);
+            }
         }
 
         public Usuario GetUsuarioLogin(Usuario usuario)

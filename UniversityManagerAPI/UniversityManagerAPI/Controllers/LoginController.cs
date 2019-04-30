@@ -39,11 +39,11 @@ namespace UniversityManagerAPI.Controllers
         //}
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody]Usuario user)
+        public IActionResult Register([FromBody]Usuario user)
         {
             if (ModelState.IsValid)
             {
-                var retorno = await _usuariosRepository.Create(user);
+                var retorno = _usuariosRepository.Create(user);
                 return Ok(retorno);
             }
             else
