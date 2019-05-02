@@ -8,6 +8,7 @@ namespace UniversityManagerAPI.Repositories.Interfaces
 {
     public interface IBaseRepository<T> where T : BaseModel 
     {
-        T Create(T model);
+        Task<T> Create(T model);
+        Task<T> GetAsync(int id);
     }
 }

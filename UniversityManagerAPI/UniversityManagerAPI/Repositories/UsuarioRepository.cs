@@ -15,7 +15,7 @@ namespace UniversityManagerAPI.Repositories
         {
         }
 
-        public Usuario Create(Usuario model)
+        public async Task<Usuario> Create(Usuario model)
         {
             try
             {
@@ -32,11 +32,18 @@ namespace UniversityManagerAPI.Repositories
             }
         }
 
+        public Task<Usuario> GetAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Usuario GetUsuarioLogin(Usuario usuario)
         {
             return _context.Usuarios
                 .Where(u => u.Login == usuario.Login && u.Password == usuario.Password)
                 .SingleOrDefault();
         }
+
+        
     }
 }
