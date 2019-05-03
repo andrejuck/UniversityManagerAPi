@@ -41,9 +41,26 @@ namespace UniversityManagerAPI.Repositories
             }
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var aluno = _context.Alunos
+                    .Where(w => w.Id == id)
+                    .SingleOrDefault();
+
+                if (aluno != null)
+                {
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+
+                throw new Exception("Não foi possível encontrar o Aluno.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao excluir Aluno: " + ex.Message);
+            }
         }
 
         public async Task<List<Aluno>> GetAllAsync()
@@ -53,7 +70,10 @@ namespace UniversityManagerAPI.Repositories
                 var alunos = await _context.Alunos
                     .ToListAsync();
 
-                return alunos;
+                if (alunos.Count > 0)
+                    return alunos;
+
+                throw new Exception("Não foi possível encontrar alunos");
             }
             catch (Exception ex)
             {
@@ -80,14 +100,17 @@ namespace UniversityManagerAPI.Repositories
             }
         }
 
-        public Task<Aluno> Update(Aluno model)
+        public async Task<Aluno> Update(Aluno model)
         {
             try
             {
-                var aluno = _context.Alunos.Update(model);
-
-
-
+                _context.Alunos.Update(model);
+                if (await _context.SaveChangesAsync() > 0)
+                    return _context.Alunos
+                        .Where(w => w.Id == model.Id)
+                        .SingleOrDefault();
+                else
+                    throw new Exception("Não foi possível salvar os novos dados do aluno.");
             }
             catch (Exception ex)
             {

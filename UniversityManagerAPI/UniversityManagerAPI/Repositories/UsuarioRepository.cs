@@ -63,7 +63,7 @@ namespace UniversityManagerAPI.Repositories
                 .SingleOrDefault();
         }
 
-        public Task<Usuario> Update(int id, Usuario model)
+        public Task<Usuario> Update(Usuario model)
         {
             throw new NotImplementedException();
         }

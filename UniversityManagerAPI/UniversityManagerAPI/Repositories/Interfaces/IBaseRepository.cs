@@ -11,7 +11,7 @@ namespace UniversityManagerAPI.Repositories.Interfaces
         Task<bool> Create(T model);
         Task<T> GetAsync(int id);
         Task<List<T>> GetAllAsync();
-        Task<T> Update(int id, T model);
+        Task<T> Update(T model);
         Task<bool> Delete(int id);
     }
 }

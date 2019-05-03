@@ -40,7 +40,7 @@ namespace UniversityManagerAPI.Controllers
 
         // POST: api/Aluno/RegistrarAluno
         [HttpPost]
-        public async Task<ActionResult<Aluno>> RegistrarAluno([FromBody] AlunoViewModel aluno)
+        public async Task<ActionResult<bool>> RegistrarAluno([FromBody] AlunoViewModel aluno)
         {
             var novoAluno = new AlunoViewModel().ConverterViewModelParaModel(aluno);
             var model = await _alunoRepository.Create(novoAluno);
@@ -48,20 +48,32 @@ namespace UniversityManagerAPI.Controllers
             return Ok(model);
         }
 
-        // PUT: api/Aluno/EditarAluno/5
-        [HttpPut("{idAluno}")]
-        public async Task<ActionResult<Aluno>> EditarAluno(int idAluno, [FromBody] AlunoViewModel aluno)
+        // PUT: api/Aluno/EditarAluno
+        [HttpPut]
+        public async Task<ActionResult<Aluno>> EditarAluno([FromBody] AlunoViewModel aluno)
         {
-            var alunoEditado = new AlunoViewModel().ConverterViewModelParaModel(aluno);
-            var retorno = await _alunoRepository.Update(idAluno, alunoEditado);
+            //if (string.IsNullOrEmpty(aluno.Email))
+            //    return BadRequest();
+            if (ModelState.IsValid)
+            {
+                var alunoEditado = new AlunoViewModel().ConverterViewModelParaModel(aluno);
+                var retorno = await _alunoRepository.Update(alunoEditado);
 
-            return Ok(retorno);
+                return Ok(retorno);
+            }
+
+            return BadRequest();
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Aluno/ExcluirAluno/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult<bool>> ExcluirAluno(int id)
         {
+            var retorno = await _alunoRepository.Delete(id);
+            if (retorno)
+                return Ok();
+
+            return BadRequest();
         }
     }
 }
