@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UniversityManagerAPI.Models;
+using UniversityManagerAPI.Models.ViewModel;
 using UniversityManagerAPI.Repositories.Interfaces;
 
 namespace UniversityManagerAPI.Controllers
@@ -20,33 +21,41 @@ namespace UniversityManagerAPI.Controllers
             _alunoRepository = alunoRepository;
         }
 
-        // GET: api/Aluno
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Aluno/5
-        [HttpGet("{idAluno}", Name = "Get")]
-        public async Task<ActionResult<Aluno>> Get(int idAluno)
+        // GET: api/Aluno/GetAluno/5
+        [HttpGet("{idAluno}")]
+        public async Task<ActionResult<Aluno>> GetAluno(int idAluno)
         {
             var model = await _alunoRepository.GetAsync(idAluno);
 
             return Ok(model);
         }
 
-        // POST: api/Aluno
-        [HttpPost]
-        public void Post([FromBody] Aluno novoAluno)
+        [HttpGet]
+        public async Task<ActionResult<Aluno>> GetTodosAlunos()
         {
-            var model = await _alunoRepository.Create(novoAluno);
+            var model = await _alunoRepository.GetAllAsync();
+
+            return Ok(model);
         }
 
-        // PUT: api/Aluno/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // POST: api/Aluno/RegistrarAluno
+        [HttpPost]
+        public async Task<ActionResult<Aluno>> RegistrarAluno([FromBody] AlunoViewModel aluno)
         {
+            var novoAluno = new AlunoViewModel().ConverterViewModelParaModel(aluno);
+            var model = await _alunoRepository.Create(novoAluno);
+
+            return Ok(model);
+        }
+
+        // PUT: api/Aluno/EditarAluno/5
+        [HttpPut("{idAluno}")]
+        public async Task<ActionResult<Aluno>> EditarAluno(int idAluno, [FromBody] AlunoViewModel aluno)
+        {
+            var alunoEditado = new AlunoViewModel().ConverterViewModelParaModel(aluno);
+            var retorno = await _alunoRepository.Update(idAluno, alunoEditado);
+
+            return Ok(retorno);
         }
 
         // DELETE: api/ApiWithActions/5

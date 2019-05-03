@@ -15,21 +15,40 @@ namespace UniversityManagerAPI.Repositories
         {
         }
 
-        public async Task<Usuario> Create(Usuario model)
+        public async Task<bool> Create(Usuario model)
         {
             try
             {
-                _context.Add(model);
+                //Validating if the user email is unique.
+                var user = _context.Usuarios
+                    .Where(w => w.Email == model.Email)
+                    .SingleOrDefault();
 
-                if (_context.SaveChanges() > 0)
-                    return model;
+                if (user == null)
+                {
+                    _context.Add(model);
+                    if (_context.SaveChanges() > 0)
+                        return true;
 
-                return null;
+                    throw new Exception("Erro ao salvar os dados do usuário");
+                }
+                else
+                    throw new Exception("Email já cadastrado.");
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao registrar usuário: " + ex.Message);
             }
+        }
+
+        public Task<bool> Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Usuario>> GetAllAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public Task<Usuario> GetAsync(int id)
@@ -44,6 +63,9 @@ namespace UniversityManagerAPI.Repositories
                 .SingleOrDefault();
         }
 
-        
+        public Task<Usuario> Update(int id, Usuario model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

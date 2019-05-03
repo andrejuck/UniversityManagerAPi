@@ -15,22 +15,49 @@ namespace UniversityManagerAPI.Repositories
         {
         }
 
-        public async Task<Aluno> Create(Aluno model)
+        public async Task<bool> Create(Aluno model)
         {
             try
             {
-                //TODO - Validate one to one relation on email. One Student to One User Email.
                 var usuario = _context.Usuarios
-                    .Include(i => i.Aluno)
                     .Where(w => w.Email == model.Email)
-                    .SingleOrDefault();
+                    .ToList();
 
-                //TODO - Include FK to Aluno.
+                //Validating if ONLY one user has the student email.
+                if (usuario.Count == 1)
+                    usuario.FirstOrDefault().Aluno = model;
+                else if (usuario.Count == 0)
+                    throw new Exception("Nenhum usuário encontrado com o email fornecido.");
+                else
+                    throw new Exception("Mais de um usuario encontrado com o email do aluno.");
 
+                if (await _context.SaveChangesAsync() > 0) return true;
+
+                throw new Exception("Erro não tratado.");
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao cadastrar o aluno: " + ex.Message);
+            }
+        }
+
+        public Task<bool> Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<Aluno>> GetAllAsync()
+        {
+            try
+            {
+                var alunos = await _context.Alunos
+                    .ToListAsync();
+
+                return alunos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao buscar todos os alunos: " + ex.Message);
             }
         }
 
@@ -50,6 +77,21 @@ namespace UniversityManagerAPI.Repositories
             catch (Exception ex)
             {
                 throw new Exception("Erro ao buscar o aluno: " + ex.Message);
+            }
+        }
+
+        public Task<Aluno> Update(Aluno model)
+        {
+            try
+            {
+                var aluno = _context.Alunos.Update(model);
+
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao editar o aluno: " + ex.Message);
             }
         }
     }
