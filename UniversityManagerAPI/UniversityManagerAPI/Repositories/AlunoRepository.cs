@@ -33,7 +33,7 @@ namespace UniversityManagerAPI.Repositories
 
                 if (await _context.SaveChangesAsync() > 0) return true;
 
-                throw new Exception("Erro não tratado.");
+                throw new Exception("Não foi possível salvar o Aluno.");
             }
             catch (Exception ex)
             {
@@ -50,12 +50,13 @@ namespace UniversityManagerAPI.Repositories
                     .SingleOrDefault();
 
                 if (aluno != null)
-                {
-                    await _context.SaveChangesAsync();
-                    return true;
-                }
+                    _context.Remove(aluno);
+                else
+                    throw new Exception("Não foi possível encontrar o Aluno.");
 
-                throw new Exception("Não foi possível encontrar o Aluno.");
+                if (await _context.SaveChangesAsync() > 0) return true;
+
+                throw new Exception("Não foi possível excluir o Aluno");
             }
             catch (Exception ex)
             {
@@ -67,13 +68,8 @@ namespace UniversityManagerAPI.Repositories
         {
             try
             {
-                var alunos = await _context.Alunos
+                return await _context.Alunos
                     .ToListAsync();
-
-                if (alunos.Count > 0)
-                    return alunos;
-
-                throw new Exception("Não foi possível encontrar alunos");
             }
             catch (Exception ex)
             {
@@ -109,8 +105,8 @@ namespace UniversityManagerAPI.Repositories
                     return _context.Alunos
                         .Where(w => w.Id == model.Id)
                         .SingleOrDefault();
-                else
-                    throw new Exception("Não foi possível salvar os novos dados do aluno.");
+
+                throw new Exception("Não foi possível salvar os novos dados do aluno.");
             }
             catch (Exception ex)
             {

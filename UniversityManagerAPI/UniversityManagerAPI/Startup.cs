@@ -58,6 +58,8 @@ namespace UniversityManagerAPI
 
             services.AddTransient<IUsuarioRepository, UsuarioRepository>();
             services.AddTransient<IAlunoRepository, AlunoRepository>();
+            services.AddTransient<ICursoRepository, CursoRepository>();
+            services.AddTransient<IDisciplinaRepository, DisciplinaRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

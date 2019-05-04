@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace UniversityManagerAPI.Models.ViewModel
 {
-    public class AlunoViewModel
-    {
-        [Required]
+    public class AlunoViewModel : BaseViewModel<AlunoViewModel>
+    {        
         public int IdAluno { get; set; }
         public int RegistroMatricula { get; set; }
         [Required]
@@ -17,7 +16,6 @@ namespace UniversityManagerAPI.Models.ViewModel
         public string Sobrenome { get; set; }
         public string DataNascimento { get; set; }
         public string DataCadastro { get; set; }
-        [Required]
         public int UsuarioId { get; set; }
 
         public Aluno ConverterViewModelParaModel(AlunoViewModel aluno)
@@ -39,7 +37,7 @@ namespace UniversityManagerAPI.Models.ViewModel
 
         public AlunoViewModel ConverterModelParaViewModel(Aluno aluno)
         {
-            var model = new AlunoViewModel()
+            var viewModel = new AlunoViewModel()
             {
                 Nome = aluno.Nome,
                 IdAluno = aluno.Id,
@@ -50,7 +48,7 @@ namespace UniversityManagerAPI.Models.ViewModel
                 Sobrenome = aluno.Sobrenome
             };
 
-            return model;
+            return viewModel;
         }
     }
 }
