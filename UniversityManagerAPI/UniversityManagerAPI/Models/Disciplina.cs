@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace UniversityManagerAPI.Models
         public string Descricao { get; set; }
         public CargaHoraria CargaHoraria { get; set; }
         public int CargaHorariaId { get; set; }
-        public IList<Curso> Cursos { get; set; }
+        [NotMapped]
+        public List<Curso> Cursos { get; set; }
     }
 }

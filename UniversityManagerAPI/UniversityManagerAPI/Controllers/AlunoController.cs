@@ -15,51 +15,57 @@ namespace UniversityManagerAPI.Controllers
     public class AlunoController : ControllerBase
     {
         private readonly IAlunoRepository _alunoRepository;
+        private AlunoViewModel _alunoViewModel;
 
         public AlunoController(IAlunoRepository alunoRepository)
         {
             _alunoRepository = alunoRepository;
+            _alunoViewModel = new AlunoViewModel();
         }
 
         // GET: api/Aluno/GetAluno/5
         [HttpGet("{idAluno}")]
         public async Task<ActionResult<Aluno>> GetAluno(int idAluno)
         {
-            var model = await _alunoRepository.GetAsync(idAluno);
-
-            return Ok(model);
+            return Ok(_alunoViewModel
+                .ConverterModelParaViewModel(await _alunoRepository.GetAsync(idAluno)));
         }
 
         [HttpGet]
-        public async Task<ActionResult<Aluno>> GetTodosAlunos()
+        public async Task<ActionResult<List<Aluno>>> GetTodosAlunos()
         {
-            var model = await _alunoRepository.GetAllAsync();
-
-            return Ok(model);
+            return Ok(_alunoViewModel
+                .ConverterListModelParaViewModel(await _alunoRepository.GetAllAsync()));
         }
 
         // POST: api/Aluno/RegistrarAluno
         [HttpPost]
-        public async Task<ActionResult<bool>> RegistrarAluno([FromBody] AlunoViewModel aluno)
+        public async Task<ActionResult<bool>> SalvarAluno([FromBody] AlunoViewModel alunoViewModel)
         {
-            var novoAluno = new AlunoViewModel().ConverterViewModelParaModel(aluno);
-            var model = await _alunoRepository.Create(novoAluno);
+            if (ModelState.IsValid)
+            {
+                var model = _alunoViewModel
+                    .ConverterViewModelParaModel(alunoViewModel);
 
-            return Ok(model);
+                if (await _alunoRepository.Create(model))
+                    return Ok();
+            }
+
+            return BadRequest();
         }
 
         // PUT: api/Aluno/EditarAluno
         [HttpPut]
-        public async Task<ActionResult<Aluno>> EditarAluno([FromBody] AlunoViewModel aluno)
+        public async Task<ActionResult<Aluno>> EditarAluno([FromBody] AlunoViewModel alunoViewModel)
         {
-            //if (string.IsNullOrEmpty(aluno.Email))
-            //    return BadRequest();
+            
             if (ModelState.IsValid)
             {
-                var alunoEditado = new AlunoViewModel().ConverterViewModelParaModel(aluno);
-                var retorno = await _alunoRepository.Update(alunoEditado);
+                var model = _alunoViewModel
+                    .ConverterViewModelParaModel(alunoViewModel);
 
-                return Ok(retorno);
+                return Ok(_alunoViewModel
+                    .ConverterModelParaViewModel(await _alunoRepository.Update(model)));
             }
 
             return BadRequest();
@@ -69,8 +75,7 @@ namespace UniversityManagerAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> ExcluirAluno(int id)
         {
-            var retorno = await _alunoRepository.Delete(id);
-            if (retorno)
+            if (await _alunoRepository.Delete(id))
                 return Ok();
 
             return BadRequest();

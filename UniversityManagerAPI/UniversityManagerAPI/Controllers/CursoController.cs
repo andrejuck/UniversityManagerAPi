@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UniversityManagerAPI.Models.ViewModel;
-using UniversityManagerAPI.Repositories;
+using UniversityManagerAPI.Repositories.Interfaces;
 
 namespace UniversityManagerAPI.Controllers
 {
@@ -13,18 +13,20 @@ namespace UniversityManagerAPI.Controllers
     [ApiController]
     public class CursoController : ControllerBase
     {
-        private readonly CursoRepository _cursoRepository;
+        private readonly ICursoRepository _cursoRepository;
+        private CursoViewModel _cursoViewModel;
 
-        public CursoController(CursoRepository cursoRepository)
+        public CursoController(ICursoRepository cursoRepository)
         {
             _cursoRepository = cursoRepository;
+            _cursoViewModel = new CursoViewModel();
         }
 
         // GET: api/Curso/GetCurso/{idCurso}
         [HttpGet("{idCurso}")]
         public async Task<ActionResult<CursoViewModel>> GetCurso(int idCurso)
         {
-            return Ok(new CursoViewModel()
+            return Ok(_cursoViewModel
                 .ConverterModelParaViewModel(await _cursoRepository.GetAsync(idCurso)));
         }
 
@@ -32,7 +34,7 @@ namespace UniversityManagerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<CursoViewModel>>> GetTodosCursos()
         {
-            return Ok(new CursoViewModel()
+            return Ok(_cursoViewModel
                 .ConverterListModelParaListViewModel(await _cursoRepository.GetAllAsync()));
         }
 
@@ -42,13 +44,11 @@ namespace UniversityManagerAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var model = new CursoViewModel()
+                var model = _cursoViewModel
                     .ConverterViewModelParaModel(cursoViewModel);
 
                 if (await _cursoRepository.Create(model))
                     return Ok();
-
-                return BadRequest();
             }
 
             return BadRequest();
@@ -60,10 +60,10 @@ namespace UniversityManagerAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                var model = new CursoViewModel()
+                var model = _cursoViewModel
                     .ConverterViewModelParaModel(cursoViewModel);
 
-                return Ok(new CursoViewModel()
+                return Ok(_cursoViewModel
                     .ConverterModelParaViewModel(await _cursoRepository.Update(model)));
             }
 

@@ -8,6 +8,7 @@ namespace UniversityManagerAPI.Models.ViewModel
 {
     public class AlunoViewModel : BaseViewModel<AlunoViewModel>
     {        
+        //TODO - Criar metodos de conversao de view model para model a partir de listas
         public int IdAluno { get; set; }
         public int RegistroMatricula { get; set; }
         [Required]
@@ -41,14 +42,48 @@ namespace UniversityManagerAPI.Models.ViewModel
             {
                 Nome = aluno.Nome,
                 IdAluno = aluno.Id,
-                DataCadastro = string.Format("{0}:dd/MM/yyyy", aluno.DataCadastro),
-                DataNascimento = string.Format("{0}:dd/MM/yyyy", aluno.DataNascimento),
+                DataCadastro = string.Format("{0:dd/MM/yyyy}", aluno.DataCadastro),
+                DataNascimento = string.Format("{0:dd/MM/yyyy}", aluno.DataNascimento),
                 Email = aluno.Email,
                 RegistroMatricula = aluno.RegistroMatricula,
                 Sobrenome = aluno.Sobrenome
             };
 
             return viewModel;
+        }
+
+        public List<AlunoViewModel> ConverterListModelParaViewModel(List<Aluno> lAlunos)
+        {
+            var lAlunosViewModel = lAluno.ConvertAll(x => new AlunoViewModel()
+            {
+                IdAluno = x.Id,
+                UsuarioId = x.UsuarioId,
+                RegistroMatricula = x.RegistroMatricula,
+                Sobrenome = x.Sobrenome,
+                Nome = x.Nome,
+                Email = x.Email,
+                DataCadastro = string.Format("{0:dd/MM/yyyy}", x.DataCadastro),
+                DataNascimento = string.Format("{0:dd/MM/yyyy}", x.DataNascimento)
+            });
+
+            return lAlunosViewModel;
+        }
+
+        public List<Aluno> ConverterListViewModelParaListModel(List<AlunoViewModel> lAlunosViewModel)
+        {
+            var lAlunos = lAlunosViewModel.ConvertAll(x => new Aluno()
+            {
+                Id = x.IdAluno,
+                UsuarioId = x.UsuarioId,
+                Nome = x.Nome,
+                Sobrenome = x.Sobrenome,
+                RegistroMatricula = x.RegistroMatricula,
+                Email = x.Email,
+                DataCadastro = Convert.ToDateTime(x.DataCadastro),
+                DataNascimento = Convert.ToDateTime(x.DataNascimento)
+            });
+
+            return lAlunos;
         }
     }
 }

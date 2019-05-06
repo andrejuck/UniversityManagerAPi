@@ -9,7 +9,6 @@ namespace UniversityManagerAPI.Models
     {
         public int QuantidadeHoras { get; set; }
         public double CustoBase { get; set; }
-        public Curso Curso { get; set; }
-        public int CursoId { get; set; }
+        
     }
 }
