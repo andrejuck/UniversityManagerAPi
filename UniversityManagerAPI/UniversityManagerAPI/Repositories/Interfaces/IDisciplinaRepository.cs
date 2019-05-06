@@ -8,5 +8,6 @@ namespace UniversityManagerAPI.Repositories.Interfaces
 {
     public interface IDisciplinaRepository : IBaseRepository<Disciplina>
     {
+        Task<List<Disciplina>> GetTodasDisciplinasPorCurso(int idCurso);
     }
 }

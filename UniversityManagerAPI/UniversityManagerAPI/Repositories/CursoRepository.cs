@@ -97,11 +97,11 @@ namespace UniversityManagerAPI.Repositories
                         .Where(w => w.Id == model.Id)
                         .SingleOrDefault();
 
-                throw new Exception("Não foi possível salvar os dados do Curso.");
+                throw new Exception("Não foi possível salvar as alterações do Curso.");
             }
             catch (Exception ex)
             {
-                throw new Exception("" + ex.Message);
+                throw new Exception("Erro ao alterar o curso: " + ex.Message);
             }
         }
     }
