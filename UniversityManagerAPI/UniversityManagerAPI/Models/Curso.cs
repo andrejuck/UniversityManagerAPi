@@ -13,5 +13,7 @@ namespace UniversityManagerAPI.Models
         public string Descricao { get; set; }
         [NotMapped]
         public List<Disciplina> Disciplinas { get; set; }
+        public List<Aluno> Alunos { get; set; }
+        public int QuantidadeMaximaAlunos { get; set; }
     }
 }

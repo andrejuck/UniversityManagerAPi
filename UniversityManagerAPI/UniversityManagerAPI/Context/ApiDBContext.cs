@@ -21,6 +21,7 @@ namespace UniversityManagerAPI.Context
         public DbSet<Curso> Cursos { get; set; }
         public DbSet<CargaHoraria> CargasHorarias { get; set; }
         public DbSet<Disciplina> Disciplinas { get; set; }        
+        public DbSet<CursoDisciplina> CursoDisciplina { get; set; }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

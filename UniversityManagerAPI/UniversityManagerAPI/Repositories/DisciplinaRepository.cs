@@ -19,19 +19,22 @@ namespace UniversityManagerAPI.Repositories
         {
             try
             {
-                var curso = await _context.Cursos
-                    .Where(w => w.Id == model.Cursos.SingleOrDefault().Id)
-                    .SingleOrDefaultAsync();
-
-                if (curso == null)
-                    throw new Exception("Não foi possível encontrar o Curso.");
-
                 var cargaHoraria = await _context.CargasHorarias
-                    .Where(w => w.Id == model.Id)
+                    .Where(w => w.Id == model.CargaHorariaId)
                     .SingleOrDefaultAsync();
 
                 model.CargaHoraria = cargaHoraria ?? throw new Exception("Não foi possível encontrar a Carga Horária");
-                model.Cursos.Add(curso);
+                model.CursosLink = new List<CursoDisciplina>()
+                {
+                    new CursoDisciplina()
+                    {
+                        Curso = _context.Cursos
+                        .Where(w => w.Id == model.Cursos.SingleOrDefault().Id)
+                        .SingleOrDefault(),
+                        Disciplina = model
+                    }
+                };
+                await _context.Disciplinas.AddAsync(model);
 
                 if (await _context.SaveChangesAsync() > 0)
                     return true;
@@ -73,7 +76,7 @@ namespace UniversityManagerAPI.Repositories
             try
             {
                 return await _context.Disciplinas
-                    .Include(i => i.Cursos)
+                    //.Include(i => i.Cursos)
                     .Include(i => i.CargaHoraria)
                     .ToListAsync();
             }
@@ -88,10 +91,18 @@ namespace UniversityManagerAPI.Repositories
             try
             {
                 var disciplina = await _context.Disciplinas
-                    .Include(i => i.Cursos)
-                    .Include(i => i.CargaHoraria)                    
+                    .Include(i => i.CargaHoraria)
+                    .Include(disc => disc.CursosLink)                    
                     .Where(w => w.Id == id)
                     .SingleOrDefaultAsync();
+
+                //Funcionou, porém não sei se é a melhor maneira.
+                disciplina.Cursos = new List<Curso>();
+                foreach (var item in disciplina.CursosLink)
+                {                    
+                    var curso = _context.Cursos.Find(item.CursoId);
+                    disciplina.Cursos.Add(curso);
+                }
 
                 if (disciplina != null)
                     return disciplina;
@@ -108,9 +119,22 @@ namespace UniversityManagerAPI.Repositories
         {
             try
             {
-                return await _context.Disciplinas
-                    .Include(i => i.Cursos.FindAll(f => f.Id == idCurso))
+                var cursosDisciplinas = await _context.CursoDisciplina
+                    .Where(w => w.CursoId == idCurso)
                     .ToListAsync();
+
+                var disciplinas = new List<Disciplina>();
+                foreach (var item in cursosDisciplinas)
+                {
+                    var disciplina = await _context.Disciplinas
+                        .Where(w => w.Id == item.DisciplinaId)
+                        .SingleOrDefaultAsync();
+
+                    disciplinas.Add(disciplina);
+                }
+
+                return disciplinas;
+
             }
             catch (Exception ex)
             {
@@ -126,8 +150,7 @@ namespace UniversityManagerAPI.Repositories
                     .Update(model);
 
                 if (await _context.SaveChangesAsync() > 0)
-                    return await _context.Disciplinas
-                        .Include(i => i.Cursos)
+                    return await _context.Disciplinas                        
                         .Include(i => i.CargaHoraria)
                         .Where(w => w.Id == model.Id)
                         .SingleOrDefaultAsync();

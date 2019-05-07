@@ -12,7 +12,10 @@ namespace UniversityManagerAPI.Models
         public string Descricao { get; set; }
         public CargaHoraria CargaHoraria { get; set; }
         public int CargaHorariaId { get; set; }
+        
+        public List<CursoDisciplina> CursosLink { get; set; }
         [NotMapped]
         public List<Curso> Cursos { get; set; }
+
     }
 }

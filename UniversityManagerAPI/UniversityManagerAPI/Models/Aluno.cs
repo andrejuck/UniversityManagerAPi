@@ -14,6 +14,8 @@ namespace UniversityManagerAPI.Models
         public DateTime DataNascimento { get; set; }        
         public int UsuarioId { get; set; }
         public Usuario Usuario { get; set; }
-        public List<Telefone> Telefones { get; set; }        
+        public List<Telefone> Telefones { get; set; }
+        public int CursoId { get; set; }
+        public Curso Curso { get; set; }
     }
 }

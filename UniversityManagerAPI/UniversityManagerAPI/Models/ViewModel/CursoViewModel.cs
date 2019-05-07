@@ -10,20 +10,18 @@ namespace UniversityManagerAPI.Models.ViewModel
     {
         private DisciplinaViewModel _disciplinaViewModel;
 
-        public CursoViewModel()
-        {
-            _disciplinaViewModel = new DisciplinaViewModel();
-        }
 
         public int CursoId { get; set; }
         public string Codigo { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public string DataCadastro { get; set; }
+        public int QuantidadeMaximaAlunos { get; set; }
         public List<DisciplinaViewModel> Disciplinas { get; set; }
 
         public Curso ConverterViewModelParaModel(CursoViewModel curso)
         {
+            _disciplinaViewModel = new DisciplinaViewModel();
             var model = new Curso()
             {
                 Id = curso.CursoId,
@@ -31,7 +29,8 @@ namespace UniversityManagerAPI.Models.ViewModel
                 DataCadastro = Convert.ToDateTime(curso.DataCadastro),
                 Nome = curso.Nome,
                 Descricao = curso.Descricao,
-                Disciplinas = curso.Disciplinas != null ? _disciplinaViewModel.ConverterListViewModelParaListModel(curso.Disciplinas) : null
+                Disciplinas = curso.Disciplinas != null ? _disciplinaViewModel.ConverterListViewModelParaListModel(curso.Disciplinas) : null,
+                QuantidadeMaximaAlunos = curso.QuantidadeMaximaAlunos
             };
 
             return model;
@@ -39,6 +38,7 @@ namespace UniversityManagerAPI.Models.ViewModel
 
         public CursoViewModel ConverterModelParaViewModel(Curso curso)
         {
+            _disciplinaViewModel = new DisciplinaViewModel();
             var viewModel = new CursoViewModel()
             {
                 CursoId = curso.Id,
@@ -46,13 +46,15 @@ namespace UniversityManagerAPI.Models.ViewModel
                 Descricao = curso.Descricao,
                 Codigo = curso.Codigo,
                 DataCadastro = string.Format("{0:dd/MM/yyyy}", curso.DataCadastro),
-                Disciplinas = curso.Disciplinas != null ? _disciplinaViewModel.ConverterListModelParaListViewModel(curso.Disciplinas) : null
+                Disciplinas = curso.Disciplinas != null ? _disciplinaViewModel.ConverterListModelParaListViewModel(curso.Disciplinas) : null,
+                QuantidadeMaximaAlunos = curso.QuantidadeMaximaAlunos
             };
 
             return viewModel;
         }
         public List<CursoViewModel> ConverterListModelParaListViewModel(List<Curso> lCursos)
         {
+            
             //TODO - converter o retorno de disciplinas também
             var lCursosViewModel = lCursos.ConvertAll(x => new CursoViewModel
             {
@@ -60,7 +62,8 @@ namespace UniversityManagerAPI.Models.ViewModel
                 Codigo = x.Codigo,
                 DataCadastro = string.Format("{0:dd/MM/yyyy}", x.DataCadastro),
                 CursoId = x.Id,
-                Nome = x.Nome
+                Nome = x.Nome,
+                QuantidadeMaximaAlunos = x.QuantidadeMaximaAlunos
             });
 
             return lCursosViewModel;
@@ -75,7 +78,8 @@ namespace UniversityManagerAPI.Models.ViewModel
                 Codigo = x.Codigo,
                 DataCadastro = Convert.ToDateTime(x.DataCadastro),
                 Descricao = x.Descricao,
-                Nome = x.Nome
+                Nome = x.Nome,
+                QuantidadeMaximaAlunos = x.QuantidadeMaximaAlunos
             });
 
             return lCursos;

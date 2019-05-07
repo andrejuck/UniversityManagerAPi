@@ -8,5 +8,6 @@ namespace UniversityManagerAPI.Repositories.Interfaces
 {
     public interface IAlunoRepository : IBaseRepository<Aluno>
     {
+        Task<Aluno> GetAlunoPorCurso(int idCurso);
     }
 }

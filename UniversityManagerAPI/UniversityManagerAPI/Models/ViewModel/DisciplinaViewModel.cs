@@ -28,7 +28,7 @@ namespace UniversityManagerAPI.Models.ViewModel
                 DataCadastro = string.Format("{0:dd/MM/yyyy}", disciplina.DataCadastro),
                 Descricao = disciplina.Descricao,
                 Nome = disciplina.Nome,
-                Cursos = disciplina.Cursos != null ? _cursoViewModel.ConverterListModelParaListViewModel(disciplina.Cursos) : null
+                Cursos = disciplina.CursosLink != null ? _cursoViewModel.ConverterListModelParaListViewModel(disciplina.Cursos) : null
             };
 
             return disciplinaViewModel;

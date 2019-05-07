@@ -8,7 +8,6 @@ namespace UniversityManagerAPI.Models.ViewModel
 {
     public class AlunoViewModel : BaseViewModel<AlunoViewModel>
     {        
-        //TODO - Criar metodos de conversao de view model para model a partir de listas
         public int IdAluno { get; set; }
         public int RegistroMatricula { get; set; }
         [Required]
@@ -18,6 +17,7 @@ namespace UniversityManagerAPI.Models.ViewModel
         public string DataNascimento { get; set; }
         public string DataCadastro { get; set; }
         public int UsuarioId { get; set; }
+        public Curso Curso { get; set; }
 
         public Aluno ConverterViewModelParaModel(AlunoViewModel aluno)
         {
@@ -30,7 +30,8 @@ namespace UniversityManagerAPI.Models.ViewModel
                 Sobrenome = aluno.Sobrenome,
                 DataNascimento = Convert.ToDateTime(aluno.DataNascimento),
                 DataCadastro = string.IsNullOrEmpty(aluno.DataCadastro) ? DateTime.Now : Convert.ToDateTime(aluno.DataCadastro),
-                UsuarioId = aluno.UsuarioId
+                UsuarioId = aluno.UsuarioId,
+                Curso = aluno.Curso                                
             };
 
             return model;
@@ -46,7 +47,9 @@ namespace UniversityManagerAPI.Models.ViewModel
                 DataNascimento = string.Format("{0:dd/MM/yyyy}", aluno.DataNascimento),
                 Email = aluno.Email,
                 RegistroMatricula = aluno.RegistroMatricula,
-                Sobrenome = aluno.Sobrenome
+                Sobrenome = aluno.Sobrenome,
+                UsuarioId = aluno.UsuarioId,
+                Curso = aluno.Curso
             };
 
             return viewModel;
@@ -54,7 +57,7 @@ namespace UniversityManagerAPI.Models.ViewModel
 
         public List<AlunoViewModel> ConverterListModelParaViewModel(List<Aluno> lAlunos)
         {
-            var lAlunosViewModel = lAluno.ConvertAll(x => new AlunoViewModel()
+            var lAlunosViewModel = lAlunos.ConvertAll(x => new AlunoViewModel()
             {
                 IdAluno = x.Id,
                 UsuarioId = x.UsuarioId,
@@ -63,7 +66,8 @@ namespace UniversityManagerAPI.Models.ViewModel
                 Nome = x.Nome,
                 Email = x.Email,
                 DataCadastro = string.Format("{0:dd/MM/yyyy}", x.DataCadastro),
-                DataNascimento = string.Format("{0:dd/MM/yyyy}", x.DataNascimento)
+                DataNascimento = string.Format("{0:dd/MM/yyyy}", x.DataNascimento),
+                Curso = x.Curso
             });
 
             return lAlunosViewModel;
@@ -80,7 +84,8 @@ namespace UniversityManagerAPI.Models.ViewModel
                 RegistroMatricula = x.RegistroMatricula,
                 Email = x.Email,
                 DataCadastro = Convert.ToDateTime(x.DataCadastro),
-                DataNascimento = Convert.ToDateTime(x.DataNascimento)
+                DataNascimento = Convert.ToDateTime(x.DataNascimento),
+                Curso = x.Curso
             });
 
             return lAlunos;

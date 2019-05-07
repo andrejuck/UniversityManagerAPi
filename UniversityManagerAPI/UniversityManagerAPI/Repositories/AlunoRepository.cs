@@ -46,6 +46,7 @@ namespace UniversityManagerAPI.Repositories
             try
             {
                 var aluno = _context.Alunos
+                    .Include(curso => curso.Curso)
                     .Where(w => w.Id == id)
                     .SingleOrDefault();
 
@@ -69,6 +70,7 @@ namespace UniversityManagerAPI.Repositories
             try
             {
                 return await _context.Alunos
+                    .Include(curso => curso.Curso)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -77,11 +79,17 @@ namespace UniversityManagerAPI.Repositories
             }
         }
 
+        public Task<Aluno> GetAlunoPorCurso(int idCurso)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Aluno> GetAsync(int id)
         {
             try
             {
-                var aluno = await _context.Alunos
+                var aluno = await _context.Alunos      
+                    .Include(x => x.Curso)
                     .Where(w => w.Id == id)
                     .SingleAsync();
 
@@ -103,6 +111,7 @@ namespace UniversityManagerAPI.Repositories
                 _context.Alunos.Update(model);
                 if (await _context.SaveChangesAsync() > 0)
                     return _context.Alunos
+                        .Include(curso => curso.Curso)
                         .Where(w => w.Id == model.Id)
                         .SingleOrDefault();
 

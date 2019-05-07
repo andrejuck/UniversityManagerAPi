@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniversityManagerAPI.Context;
 
 namespace UniversityManagerAPI.Migrations
 {
     [DbContext(typeof(ApiDBContext))]
-    partial class ApiDBContextModelSnapshot : ModelSnapshot
+    [Migration("20190507004129_alunos_curso")]
+    partial class alunos_curso
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +27,7 @@ namespace UniversityManagerAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CursoId");
+                    b.Property<int?>("CursoId");
 
                     b.Property<DateTime>("DataCadastro");
 
@@ -111,8 +113,6 @@ namespace UniversityManagerAPI.Migrations
                     b.Property<string>("Descricao");
 
                     b.Property<string>("Nome");
-
-                    b.Property<int>("QuantidadeMaximaAlunos");
 
                     b.HasKey("Id");
 
@@ -220,8 +220,7 @@ namespace UniversityManagerAPI.Migrations
                 {
                     b.HasOne("UniversityManagerAPI.Models.Curso", "Curso")
                         .WithMany("Alunos")
-                        .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CursoId");
 
                     b.HasOne("UniversityManagerAPI.Models.Usuario", "Usuario")
                         .WithOne("Aluno")

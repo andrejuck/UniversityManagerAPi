@@ -23,7 +23,7 @@ namespace UniversityManagerAPI.Controllers
         }
 
         // GET: api/GetDisciplina/idDisciplina
-        [HttpGet("idDisciplina")]
+        [HttpGet("{idDisciplina}")]
         public async Task<ActionResult<DisciplinaViewModel>> GetDisciplina(int idDisciplina)
         {
             return Ok(_disciplinaViewModel
@@ -41,16 +41,10 @@ namespace UniversityManagerAPI.Controllers
 
         // GET: api/Disciplina/GetTodasDisciplinas
         [HttpGet]
-        public async Task<ActionResult<List<DisciplinaViewModel>>> GetTodasDisciplinas(int idCurso)
+        public async Task<ActionResult<List<DisciplinaViewModel>>> GetTodasDisciplinas()
         {
             return Ok(_disciplinaViewModel
                 .ConverterListModelParaListViewModel(await _disciplinaRepository.GetAllAsync()));
-        }
-
-        // POST: api/Disciplina/
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
         }
 
         // PUT: api/Disciplina/SalvarDisciplina
@@ -63,7 +57,7 @@ namespace UniversityManagerAPI.Controllers
                     .ConverterViewModelParaModel(disciplinaViewModel);
 
                 if (await _disciplinaRepository.Create(model))
-                    Ok();
+                    return Ok();
             }
 
             return BadRequest();
@@ -85,9 +79,13 @@ namespace UniversityManagerAPI.Controllers
         }
 
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{idDisciplina}")]
+        public async Task<ActionResult<bool>> Delete(int idDisciplina)
         {
+            if (await _disciplinaRepository.Delete(idDisciplina))
+                return Ok();
+
+            return BadRequest();
         }
     }
 }
